@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+  <form action="/" method="post">
+    暱稱<input type="text" name="username">
+    <br>
+    密碼<input type="password" name="password">
+    <br>
+    <input type="submit" value="登入">
+  </form>
+  <button onclick="toCreate()">註冊</button>
+  <script>
+    function toCreate(){
+      window.location = '/create' 
+    }
+  </script>
+</body>
+</html>

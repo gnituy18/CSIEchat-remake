@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/4.2.2/pixi.min.js"></script>
+</head>
+<body>
+  <span id="username" style="display:none;">{{ username }}</span>
+  <span id="image" style="display:none;">{{ image }}</span>
+  <div id="beach"></div>
+  <form onsubmit="return false" action="/">
+    <input id="msg" type="text" style="width:500px;">
+    <input id="submit" type="submit"  value="送出" >
+  </form>
+  <form method="get" action="/logout">
+    <input type="submit" value="登出" >
+  </form>
+  <script src="/js/main.js"></script>
+</body>
+</html>
