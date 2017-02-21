@@ -13,7 +13,6 @@ const passwordHash = require('password-hash')
 const path = require('path')
 const socket = require('socket.io')
 const http = require('http')
-const userHelper = require('./helpers/user')
 const server = http.createServer(koa.callback())
 const io = socket.listen(server)
 
@@ -111,7 +110,12 @@ router.post('/create', function* (next) {
   }
 
   // Create new user
-  yield this.mongo.db('app').collection('users').insert(userHelper.createUserObj(this.request.body))
+  yield this.mongo.db('app').collection('users')
+  .insert({
+    '_id': this.request.body.fields.username,
+    'password': passwordHash.generate(this.request.body.fields.password),
+    'image': path.basename(this.request.body.files.image.path)
+  })
 
   // Redirect to home page
   this.status = 301
