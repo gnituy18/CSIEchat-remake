@@ -1,30 +1,38 @@
 /* ============================ */
 /* =====     Requires     ===== */
 /* ============================ */
-var koa = require('koa')()
-var views = require('koa-views')
-var serve = require('koa-static')
-var router = require('koa-router')()
-var session = require('koa-session')
-var validate = require('koa-validate')
-var mongo = require('koa-mongo')
-var koaBody = require('koa-body')
-var passwordHash = require('password-hash')
-var path = require('path')
-var socket = require('socket.io')
-var http = require('http')
-var userHelper = require('./helpers/user')
-var server = http.createServer(koa.callback())
-var io = socket.listen(server)
+const koa = require('koa')()
+const views = require('koa-views')
+const serve = require('koa-static')
+const router = require('koa-router')()
+const session = require('koa-session')
+const validate = require('koa-validate')
+const mongo = require('koa-mongo')
+const koaBody = require('koa-body')
+const passwordHash = require('password-hash')
+const path = require('path')
+const socket = require('socket.io')
+const http = require('http')
+const userHelper = require('./helpers/user')
+const server = http.createServer(koa.callback())
+const io = socket.listen(server)
 
-var users = {}
-var userMappingTable = {}
-const aStep = 10
+const KEYS = process.env.KEYS || 'key'
+const PORT = process.env.PORT || 80
+const DB_NAME = process.env.DB || 'app'
+const DB_HOST = process.env.DB_HOST || 'localhost'
+const DB_PORT = process.env.DB_PORT || 27017
+const DB_USER = process.env.DB_USER || 'dbuser'
+const DB_PASS = process.env.DB_PASS || 'dbpass'
+
+const ASTEP = 10
+const users = {}
+const userMappingTable = {}
 
 /* ============================ */
 /* =====    Middlewares   ===== */
 /* ============================ */
-koa.keys = ['secret']
+koa.keys = [KEYS]
 koa.use(views(path.join(__dirname, '../views'), {'map': {'html': 'mustache'}}))
 koa.use(serve(path.join(__dirname, '../public')))
 koa.use(koaBody({
@@ -36,8 +44,11 @@ koa.use(koaBody({
 }))
 koa.use(session(koa))
 koa.use(mongo({
-  'user': 'beach',
-  'db': 'app'
+  'db': DB_NAME,
+  'host': DB_HOST,
+  'port': DB_PORT,
+  'user': DB_USER,
+  'pass': DB_PASS
 }))
 validate(koa)
 
@@ -136,16 +147,16 @@ io.on('connection', function (socket) {
     const name = userMappingTable[socket.id]
     switch (key) {
       case 'ArrowUp':
-        users[name].y = users[name].y - aStep < 550 ? 550 : users[name].y - aStep
+        users[name].y = users[name].y - ASTEP < 550 ? 550 : users[name].y - ASTEP
         break
       case 'ArrowDown':
-        users[name].y = users[name].y + aStep > 768 ? 768 : users[name].y + aStep
+        users[name].y = users[name].y + ASTEP > 768 ? 768 : users[name].y + ASTEP
         break
       case 'ArrowLeft':
-        users[name].x = users[name].x - aStep < 50 ? 50 : users[name].x - aStep
+        users[name].x = users[name].x - ASTEP < 50 ? 50 : users[name].x - ASTEP
         break
       case 'ArrowRight':
-        users[name].x = users[name].x + aStep > 1316 ? 1316 : users[name].x + aStep
+        users[name].x = users[name].x + ASTEP > 1316 ? 1316 : users[name].x + ASTEP
         break
     }
     io.emit('user move', {
@@ -186,4 +197,4 @@ io.on('connection', function (socket) {
   })
 })
 
-server.listen(3000)
+server.listen(PORT)
