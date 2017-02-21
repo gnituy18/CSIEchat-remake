@@ -4,8 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node server/server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node server/server.js"
   },
   "author": "sourfeethsu",
   "license": "ISC",
@@ -26,7 +25,7 @@
     "socket.io-client": "^1.7.2"
   },
   "devDependencies": {
-    "@sourfeethsu/eslint-config": "^0.1.0",
+    "@sourfeethsu/eslint-config": "^0.2.0",
     "gulp": "^3.9.1",
     "gulp-browserify": "^0.5.1",
     "gulp-nodemon": "^2.2.1",
