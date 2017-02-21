@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "postinstall": "browserify client/app.js -o public/js/app.js -t [ babelify --presets [ es2015 ] ]",
     "start": "node server/server.js"
   },
   "author": "sourfeethsu",
