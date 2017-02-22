@@ -103,7 +103,6 @@ router.post('/create', function* (next) {
   }
 
   // Check if username exist
-  yield this.mongo.db()
   let user = yield this.mongo.db(DB_NAME).collection('users').find({'_id': this.request.body.fields.username}).toArray()
   if (user.length > 0) {
     this.body = '你的暱稱已經存在。'
