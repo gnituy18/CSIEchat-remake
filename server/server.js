@@ -65,7 +65,7 @@ router.get('/', function* () {
 router.post('/', function* () {
   let username = this.request.body.username
   let password = this.request.body.password
-  let user = yield this.mongo.db('app').collection('users').find({'_id': username}).toArray()
+  let user = yield this.mongo.db(DB_NAME).collection('users').find({'_id': username}).toArray()
 
   if (user.length === 1 && passwordHash.verify(password, user[0].password)) {
     this.session.user = {
@@ -103,14 +103,15 @@ router.post('/create', function* (next) {
   }
 
   // Check if username exist
-  let user = yield this.mongo.db('app').collection('users').find({'_id': this.request.body.fields.username}).toArray()
+  yield this.mongo.db()
+  let user = yield this.mongo.db(DB_NAME).collection('users').find({'_id': this.request.body.fields.username}).toArray()
   if (user.length > 0) {
     this.body = '你的暱稱已經存在。'
     return
   }
 
   // Create new user
-  yield this.mongo.db('app').collection('users')
+  yield this.mongo.db(DB_NAME).collection('users')
   .insert({
     '_id': this.request.body.fields.username,
     'password': passwordHash.generate(this.request.body.fields.password),
